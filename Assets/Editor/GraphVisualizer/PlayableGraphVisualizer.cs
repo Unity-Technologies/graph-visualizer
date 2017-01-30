@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using GraphVisualizer;
-using UnityEngine.Timeline;
-using UnityEngine.Playables;
+using UnityEngine.Experimental.Director;
 
 public class PlayableGraphNode : Node
 {
@@ -14,10 +13,10 @@ public class PlayableGraphNode : Node
 
     public override Type GetContentType()
     {
-        IPlayable p = null;
+        Playable p = null;
         try
         {
-            p = ((PlayableHandle) content).GetObject<IPlayable>();
+            p = ((PlayableHandle)content).GetObject<Playable>();
         }
         catch
         {
@@ -41,17 +40,33 @@ public class PlayableGraphNode : Node
         sb.AppendLine(InfoString("Handle", GetContentTypeShortName()));
 
         var h = (PlayableHandle)content;
+
         sb.AppendLine(InfoString("IsValid", h.IsValid()));
-        sb.AppendLine(InfoString("IsDone", h.isDone));
-        sb.AppendLine(InfoString("InputCount", h.inputCount));
-        sb.AppendLine(InfoString("OutputCount", h.outputCount));
-        sb.AppendLine(InfoString("PlayState", h.playState));
-        sb.AppendLine(InfoString("Speed", h.speed));
-        sb.AppendLine(InfoString("Duration", h.duration));
-        sb.AppendLine(InfoString("Time", h.time));
-//        sb.AppendLine(InfoString("Animation", h.animatedProperties));
+
+        if (h.IsValid())
+        {
+            sb.AppendLine(InfoString("IsDone", h.isDone));
+            sb.AppendLine(InfoString("InputCount", h.inputCount));
+            sb.AppendLine(InfoString("OutputCount", h.outputCount));
+            sb.AppendLine(InfoString("PlayState", h.playState));
+            sb.AppendLine(InfoString("Speed", h.speed));
+            sb.AppendLine(InfoString("Duration", h.duration));
+            sb.AppendLine(InfoString("Time", h.time));
+            //        sb.AppendLine(InfoString("Animation", h.animatedProperties));
+        }
 
         return sb.ToString();
+    }
+
+    private static string InfoString(string key, double value)
+    {
+        return String.Format(
+            ((Math.Abs(value) < 100000.0) ? "<b>{0}:</b> {1:#.###}" : "<b>{0}:</b> {1:E4}") , key, value);
+    }
+
+    private static string InfoString(string key, int value)
+    {
+        return String.Format("<b>{0}:</b> {1:D}", key, value);
     }
 
     private static string InfoString(string key, object value)
@@ -91,7 +106,7 @@ public class PlayableGraphVisualizer : Graph
     protected override IEnumerable<Node> GetChildren(Node node)
     {
         // Children are the PlayableHandle Inputs.
-        return GetInputsNode((PlayableHandle) node.content);
+        return GetInputsNode((PlayableHandle)node.content);
     }
 
     private List<Node> GetInputsNode(PlayableHandle h)

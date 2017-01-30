@@ -97,13 +97,13 @@ public class ReingoldTilford : IGraphLayout
             nodes.Add(node);
             maxDepth = Mathf.Max(d, maxDepth);
         }
-            
+
         // Bake the left to right horizontal positions.
         var horizontalPositionForDepth = new float[maxDepth];
         horizontalPositionForDepth[0] = 0;
         for (int d = 1; d < maxDepth; ++d)
         {
-            IEnumerable<Node> nodesOnThisLevel = nodeDepths[d+1];
+            IEnumerable<Node> nodesOnThisLevel = nodeDepths[d + 1];
 
             int maxChildren = nodesOnThisLevel.Max(x => x.children.Count);
 

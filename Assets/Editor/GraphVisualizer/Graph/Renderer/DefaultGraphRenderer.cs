@@ -5,8 +5,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GraphVisualizer;
-using UnityEngine.Timeline;
-using UnityEngine.Playables;
+using UnityEngine.Experimental.Director;
 
 public class DefaultGraphRenderer : IGraphRenderer
 {
@@ -51,26 +50,33 @@ public class DefaultGraphRenderer : IGraphRenderer
 
     public void Draw(IGraphLayout graphLayout, Rect drawingArea)
     {
-        NodeConstraints defaults;
+        GraphSettings defaults;
         defaults.maximumNormalizedNodeSize = s_DefaultMaximumNormalizedNodeSize;
         defaults.maximumNodeSizeInPixels = s_DefaultMaximumNodeSizeInPixels;
         defaults.aspectRatio = s_DefaultAspectRatio;
+        defaults.showLegend = true;
         Draw(graphLayout, drawingArea, defaults);
     }
 
-    public void Draw(IGraphLayout graphLayout, Rect totalDrawingArea, NodeConstraints nodeConstraints)
+    public void Draw(IGraphLayout graphLayout, Rect totalDrawingArea, GraphSettings graphSettings)
     {
-        PrepareLegend(graphLayout.vertices);
-
-        var legendArea = new Rect(totalDrawingArea)
-        {
-            width = EstimateLegendWidth() + s_BorderSize * 2
-        };
-
+        var legendArea = new Rect();
         var drawingArea = new Rect(totalDrawingArea);
 
-        legendArea.x = drawingArea.xMax - legendArea.width;
-        drawingArea.width -= legendArea.width;// + s_BorderSize;
+        if (graphSettings.showLegend)
+        {
+            PrepareLegend(graphLayout.vertices);
+
+            legendArea = new Rect(totalDrawingArea)
+            {
+                width = EstimateLegendWidth() + s_BorderSize * 2
+            };
+
+            legendArea.x = drawingArea.xMax - legendArea.width;
+            drawingArea.width -= legendArea.width;// + s_BorderSize;
+
+            DrawLegend(legendArea);
+        }
 
         if (m_SelectedNode != null)
         {
@@ -85,8 +91,7 @@ public class DefaultGraphRenderer : IGraphRenderer
             }
         }
 
-        DrawGraph(graphLayout, drawingArea, nodeConstraints);
-        DrawLegend(legendArea);
+        DrawGraph(graphLayout, drawingArea, graphSettings);
     }
 
     private void InitializeStyles()
@@ -132,6 +137,9 @@ public class DefaultGraphRenderer : IGraphRenderer
         m_LegendForType.Clear();
         foreach (Vertex v in vertices)
         {
+            if (v.node == null)
+                continue;
+
             string nodeType = v.node.GetContentTypeName();
 
             if (m_LegendForType.ContainsKey(nodeType))
@@ -199,7 +207,7 @@ public class DefaultGraphRenderer : IGraphRenderer
         GUILayout.BeginVertical();
 
         GUILayout.Label("Inspector", m_SubTitleStyle);
-        
+
         if (m_SelectedNode != null)
         {
             GUILayout.Label(m_SelectedNode.ToString(), m_InspectorStyle);
@@ -277,7 +285,7 @@ public class DefaultGraphRenderer : IGraphRenderer
     }
 
     // Draw the graph and returns the selected Node if there's any.
-    private void DrawGraph(IGraphLayout graphLayout, Rect drawingArea, NodeConstraints nodeConstraints)
+    private void DrawGraph(IGraphLayout graphLayout, Rect drawingArea, GraphSettings graphSettings)
     {
         // add border, except on right-hand side where the legend will provide necessary padding
         drawingArea = new Rect(drawingArea.x + s_BorderSize,
@@ -292,12 +300,12 @@ public class DefaultGraphRenderer : IGraphRenderer
         }
 
         // Increase b by maximum node size (since b is measured between node centers)
-        b.Expand(new Vector3(nodeConstraints.maximumNormalizedNodeSize, nodeConstraints.maximumNormalizedNodeSize, 0));
+        b.Expand(new Vector3(graphSettings.maximumNormalizedNodeSize, graphSettings.maximumNormalizedNodeSize, 0));
 
         var scale = new Vector2(drawingArea.width / b.size.x, drawingArea.height / b.size.y);
         var offset = new Vector2(-b.min.x, -b.min.y);
 
-        Vector2 nodeSize = ComputeNodeSize(scale, nodeConstraints);
+        Vector2 nodeSize = ComputeNodeSize(scale, graphSettings);
 
         GUI.BeginGroup(drawingArea);
 
@@ -364,35 +372,35 @@ public class DefaultGraphRenderer : IGraphRenderer
     }
 
     // Apply node constraints to node size
-    private static Vector2 ComputeNodeSize(Vector2 scale, NodeConstraints nodeConstraints)
+    private static Vector2 ComputeNodeSize(Vector2 scale, GraphSettings graphSettings)
     {
         var extraTickness = (s_SelectedNodeThickness + s_ActiveNodeThickness) * 2.0f;
-        var nodeSize = new Vector2(nodeConstraints.maximumNormalizedNodeSize * scale.x - extraTickness,
-            nodeConstraints.maximumNormalizedNodeSize * scale.y - extraTickness);
+        var nodeSize = new Vector2(graphSettings.maximumNormalizedNodeSize * scale.x - extraTickness,
+            graphSettings.maximumNormalizedNodeSize * scale.y - extraTickness);
 
         // Adjust aspect ratio after scaling
         float currentAspectRatio = nodeSize.x / nodeSize.y;
 
-        if (currentAspectRatio > nodeConstraints.aspectRatio)
+        if (currentAspectRatio > graphSettings.aspectRatio)
         {
             // Shrink x dimension
-            nodeSize.x = nodeSize.y * nodeConstraints.aspectRatio;
+            nodeSize.x = nodeSize.y * graphSettings.aspectRatio;
         }
         else
         {
             // Shrink y dimension
-            nodeSize.y = nodeSize.x / nodeConstraints.aspectRatio;
+            nodeSize.y = nodeSize.x / graphSettings.aspectRatio;
         }
 
         // If node size is still too big, scale down
-        if (nodeSize.x > nodeConstraints.maximumNodeSizeInPixels)
+        if (nodeSize.x > graphSettings.maximumNodeSizeInPixels)
         {
-            nodeSize *= nodeConstraints.maximumNodeSizeInPixels / nodeSize.x;
+            nodeSize *= graphSettings.maximumNodeSizeInPixels / nodeSize.x;
         }
 
-        if (nodeSize.y > nodeConstraints.maximumNodeSizeInPixels)
+        if (nodeSize.y > graphSettings.maximumNodeSizeInPixels)
         {
-            nodeSize *= nodeConstraints.maximumNodeSizeInPixels / nodeSize.y;
+            nodeSize *= graphSettings.maximumNodeSizeInPixels / nodeSize.y;
         }
         return nodeSize;
     }

@@ -66,5 +66,10 @@ namespace GraphVisualizer
         {
             return m_Nodes.GetEnumerator();
         }
+
+        public bool IsEmpty()
+        {
+            return m_Nodes.Count == 0;
+        }
     }
 }
