@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using GraphVisualizer;
-using UnityEngine.Experimental.Director;
+using UnityEngine.Playables;
 
 public class PlayableGraphNode : Node
 {
@@ -13,10 +13,10 @@ public class PlayableGraphNode : Node
 
     public override Type GetContentType()
     {
-        Playable p = null;
+        IPlayable p = null;
         try
         {
-            p = ((PlayableHandle)content).GetObject<Playable>();
+            p = ((PlayableHandle)content).GetObject<IPlayable>();
         }
         catch
         {
