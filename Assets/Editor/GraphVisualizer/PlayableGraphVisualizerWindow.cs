@@ -100,7 +100,6 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
         // that are in the current scene.
         if (m_AutoScanScene)
         {
-#if PLAYABLE_DIRECTOR
             // This code could be generalized, maybe if we added a IHasPlayableGraph Interface.
             IList<PlayableDirector> directors = FindObjectsOfType<PlayableDirector>();
             if (directors != null)
@@ -115,8 +114,7 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
                     }
                 }
             }
-#endif
-#if ANIMATOR_5_6
+
             IList<Animator> animators = FindObjectsOfType<Animator>();
             if (animators != null)
             {
@@ -130,7 +128,6 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
                     }
                 }
             }
-#endif
         }
 
         if (GraphVisualizerClient.GetGraphs() != null)
