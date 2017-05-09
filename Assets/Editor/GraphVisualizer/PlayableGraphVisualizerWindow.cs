@@ -67,12 +67,21 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
         return selectedDirector;
     }
 
-    private void ShowMessage(string msg)
+    private static void ShowMessage(string msg)
     {
-        GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
-        centeredStyle.alignment = TextAnchor.UpperCenter;
-        int width = 15 * msg.Length;
-        GUI.Label(new Rect(0.5f * (Screen.width - width), 0.5f * (Screen.height - 50), width, 50), msg, centeredStyle);
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+
+        GUILayout.Label(msg);
+
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
     }
 
     void Update()
