@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
 using GraphVisualizer;
-using UnityEngine.Experimental.Director;
+using UnityEngine.Playables;
 using UnityEditor.Animations;
 
 public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
@@ -67,12 +67,21 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
         return selectedDirector;
     }
 
-    private void ShowMessage(string msg)
+    private static void ShowMessage(string msg)
     {
-        GUIStyle centeredStyle = GUI.skin.GetStyle("Label");
-        centeredStyle.alignment = TextAnchor.UpperCenter;
-        int width = 15 * msg.Length;
-        GUI.Label(new Rect(0.5f * (Screen.width - width), 0.5f * (Screen.height - 50), width, 50), msg, centeredStyle);
+        GUILayout.BeginVertical();
+        GUILayout.FlexibleSpace();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+
+        GUILayout.Label(msg);
+
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
+        GUILayout.FlexibleSpace();
+        GUILayout.EndVertical();
     }
 
     void Update()
@@ -100,7 +109,6 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
         // that are in the current scene.
         if (m_AutoScanScene)
         {
-#if PLAYABLE_DIRECTOR
             // This code could be generalized, maybe if we added a IHasPlayableGraph Interface.
             IList<PlayableDirector> directors = FindObjectsOfType<PlayableDirector>();
             if (directors != null)
@@ -115,8 +123,7 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
                     }
                 }
             }
-#endif
-#if ANIMATOR_5_6
+
             IList<Animator> animators = FindObjectsOfType<Animator>();
             if (animators != null)
             {
@@ -130,7 +137,6 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
                     }
                 }
             }
-#endif
         }
 
         if (GraphVisualizerClient.GetGraphs() != null)

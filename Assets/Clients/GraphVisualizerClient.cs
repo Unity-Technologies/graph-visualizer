@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.Experimental.Director;
+using UnityEngine.Playables;
 
 // Bridge between runtime and editor code: the graph created in runtime code can call GraphVisualizerClient.Show(...)
 // and the EditorWindow will register itself with the client to display any available graph.
