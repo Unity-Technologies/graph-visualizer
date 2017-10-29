@@ -41,7 +41,7 @@ public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
     [MenuItem("Window/PlayableGraph Visualizer")]
     public static void ShowWindow()
     {
-        GetWindow<PlayableGraphVisualizerWindow>("Playable Graph Visualizer");
+        GetWindow<PlayableGraphVisualizerWindow>("PlayableGraph Visualizer");
     }
 
     private PlayableGraphInfo GetSelectedGraphInToolBar(IList<PlayableGraphInfo> graphs, PlayableGraphInfo currentGraph)
