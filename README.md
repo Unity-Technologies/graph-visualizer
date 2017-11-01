@@ -18,7 +18,8 @@ Playable Handles in the graph are represented by colored nodes, varying accordin
 ## Usage
 
 - Open any scene that contains at least one `PlayableGraph`.
-- Register your `PlayableGraph` with the method `GraphVisualizerClient.Show(PlayableGraph, string)`.
+- By default, all the `PlayableGraph`s of your scene will be listed in the editor's top-left list.
+	- You can show just your `PlayableGraph` using `GraphVisualizerClient.Show(PlayableGraph)`.
 - Select the `PlayableGraph` to display in the top-left list.
 - Click on a Node to display more information about the associated Playable Handle.
 
