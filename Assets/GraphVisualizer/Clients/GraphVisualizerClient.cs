@@ -8,7 +8,7 @@ using UnityEngine.Playables;
 public class GraphVisualizerClient
 {
     private static GraphVisualizerClient s_Instance;
-    private List<PlayableGraph> m_Graphs = new List<PlayableGraph>();
+    private Dictionary<PlayableGraph, string> m_Graphs = new Dictionary<PlayableGraph, string>();
 
     public static GraphVisualizerClient instance
     {
@@ -19,29 +19,26 @@ public class GraphVisualizerClient
             return s_Instance;
         }
     }
-
     ~GraphVisualizerClient()
     {
         m_Graphs.Clear();
     }
-
-    public static void Show(PlayableGraph graph)
+    public static void Show(PlayableGraph graph, string name)
     {
-        if (!instance.m_Graphs.Contains(graph))
+        if (!instance.m_Graphs.ContainsKey(graph))
         {
-            instance.m_Graphs.Add(graph);
+            instance.m_Graphs.Add(graph, name);
         }
     }
-
     public static void Hide(PlayableGraph graph)
     {
-        if (instance.m_Graphs.Contains(graph))
+        if (instance.m_Graphs.ContainsKey(graph))
         {
             instance.m_Graphs.Remove(graph);
         }
     }
 
-    public static IEnumerable<PlayableGraph> GetGraphs()
+    public static IEnumerable<KeyValuePair<PlayableGraph, string>> GetGraphs()
     {
         return instance.m_Graphs;
     }
