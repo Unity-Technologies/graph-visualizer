@@ -10,7 +10,7 @@ Playable Handles in the graph are represented by colored nodes, varying accordin
 OR
 
 - From the command line change directory to your project's `Assets` directory.
-- Run `git clone https://github.com/Unity-Technologies/graph-visualizer` **(Note HTTPS)**
+- Run `git clone https://github.com/Unity-Technologies/graph-visualizer`
 ## Window ##
 - You can open the Timeline Visualizer in **Window > PlayableGraph Visualizer**.
 ## Usage ##
