@@ -8,8 +8,13 @@ Playable Handles in the graph are represented by colored nodes, varying accordin
 
 ## Setup
 
-- Download the release that matches your current Unity version, or the latest if there your Unity version is more recent than the latest release.
-- Copy the content of this repos Asset folder into a the Asset folder of an Unity Project.  You will need to do this for every project.
+- Download the release that matches your current Unity version, or the latest if your Unity version is more recent than the latest release.
+- Copy the content of this repo into a folder called GraphVisualizer in your Unity Project.  You will need to do this for every project.
+
+OR
+
+- From the command line change directory to your project's `Assets` directory.
+- Run `git clone https://github.com/Unity-Technologies/graph-visualizer`
 
 ## Window
 
