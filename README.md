@@ -4,8 +4,13 @@ The PlayableGraph Visualizer window can be used to display any *PlayableGraph*.
 The tool can be used in both Play and Edit mode and will always reflect the current state of the graph.
 Playable Handles in the graph are represented by colored nodes, varying according to their type. Wire color intensity indicates the local weight of the blending.
 ## Setup ##
-- Download the release that matches your current Unity version, or the latest if there your Unity version is more recent than the latest release.
-- Copy the content of this repos Asset folder into a the Asset folder of an Unity Project.  You will need to do this for every project.
+- Download the release that matches your current Unity version, or the latest if your Unity version is more recent than the latest release.
+- Copy the content of this repo into a folder called GraphVisualizer in your Unity Project.  You will need to do this for every project.
+
+OR
+
+- From the command line change directory to your project's `Assets` directory.
+- Run `git clone https://github.com/Unity-Technologies/graph-visualizer`
 ## Window ##
 - You can open the Timeline Visualizer in **Window > PlayableGraph Visualizer**.
 ## Usage ##
