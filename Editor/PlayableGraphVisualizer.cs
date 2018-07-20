@@ -127,7 +127,12 @@ namespace GraphVisualizer
             sb.AppendLine(InfoString("Handle", GetContentTypeShortName()));
 
             var po = (PlayableOutput) content;
-            sb.AppendLine(InfoString("IsValid", po.IsOutputValid()));
+            if (po.IsOutputValid())
+            {
+                sb.AppendLine(InfoString("IsValid", po.IsOutputValid()));
+                sb.AppendLine(InfoString("Weight", po.GetWeight()));
+                sb.AppendLine(InfoString("SourceOutputPort", po.GetSourceOutputPort()));
+            }
 
             return sb.ToString();
         }
