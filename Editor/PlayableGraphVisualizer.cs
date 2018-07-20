@@ -50,13 +50,13 @@ namespace GraphVisualizer
             Playable p = Playable.Null;
             try
             {
-                p = ((Playable)content);
+                p = (Playable) content;
             }
             catch
             {
                 // Ignore.
             }
-            return !p.IsValid() ? null : p.GetPlayableType();
+            return p.IsValid() ? p.GetPlayableType() : null;
         }
 
         public override string GetContentTypeShortName()
@@ -73,20 +73,18 @@ namespace GraphVisualizer
 
             sb.AppendLine(InfoString("Handle", GetContentTypeShortName()));
 
-            var h = (Playable)content;
-
-            sb.AppendLine(InfoString("IsValid", h.IsValid()));
-
-            if (h.IsValid())
+            var p = (Playable) content;
+            sb.AppendLine(InfoString("IsValid",  p.IsValid()));
+            if (p.IsValid())
             {
-                sb.AppendLine(InfoString("IsDone", h.IsDone()));
-                sb.AppendLine(InfoString("InputCount", h.GetInputCount()));
-                sb.AppendLine(InfoString("OutputCount", h.GetOutputCount()));
-                sb.AppendLine(InfoString("PlayState", h.GetPlayState()));
-                sb.AppendLine(InfoString("Speed", h.GetSpeed()));
-                sb.AppendLine(InfoString("Duration", h.GetDuration()));
-                sb.AppendLine(InfoString("Time", h.GetTime()));
-                //        sb.AppendLine(InfoString("Animation", h.animatedProperties));
+                sb.AppendLine(InfoString("IsDone", p.IsDone()));
+                sb.AppendLine(InfoString("InputCount", p.GetInputCount()));
+                sb.AppendLine(InfoString("OutputCount", p.GetOutputCount()));
+                sb.AppendLine(InfoString("PlayState", p.GetPlayState()));
+                sb.AppendLine(InfoString("Speed", p.GetSpeed()));
+                sb.AppendLine(InfoString("Duration", p.GetDuration()));
+                sb.AppendLine(InfoString("Time", p.GetTime()));
+                //sb.AppendLine(InfoString("Animation", p.animatedProperties));
             }
 
             return sb.ToString();
@@ -102,16 +100,16 @@ namespace GraphVisualizer
 
         public override Type GetContentType()
         {
-            PlayableOutput p = PlayableOutput.Null;
+            PlayableOutput po = PlayableOutput.Null;
             try
             {
-                p = ((PlayableOutput)content);
+                po = (PlayableOutput) content;
             }
             catch
             {
                 // Ignore.
             }
-            return !p.IsOutputValid() ? null : p.GetPlayableOutputType();
+            return po.IsOutputValid() ? po.GetPlayableOutputType() : null;
         }
 
         public override string GetContentTypeShortName()
@@ -128,9 +126,8 @@ namespace GraphVisualizer
 
             sb.AppendLine(InfoString("Handle", GetContentTypeShortName()));
 
-            var h = (PlayableOutput)content;
-
-            sb.AppendLine(InfoString("IsValid", h.IsOutputValid()));
+            var po = (PlayableOutput) content;
+            sb.AppendLine(InfoString("IsValid", po.IsOutputValid()));
 
             return sb.ToString();
         }
@@ -166,7 +163,7 @@ namespace GraphVisualizer
             // Children are the Playable Inputs.
             if(node is PlayableNode)
                 return GetInputsFromPlayableNode((Playable)node.content);
-            else if(node is PlayableOutputNode)
+            if(node is PlayableOutputNode)
                 return GetInputsFromPlayableOutputNode((PlayableOutput)node.content);
 
             return new List<Node>();     
