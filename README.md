@@ -33,7 +33,7 @@ _Note:_
 
 ## Unity compatibility
 
-Release       | Unity version
---------------|--------------
-v2.2 (master) | 2018.1+
-v1.1          | 2017.1+
+ Unity version | Release
+---------------|--------------
+ 2018.1+       | v2.3 (master)
+ 2017.1+       | v1.1
