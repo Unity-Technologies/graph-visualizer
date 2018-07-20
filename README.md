@@ -35,5 +35,5 @@ _Note:_
 
  Unity version | Release
 ---------------|--------------
- 2018.1+       | v2.3 (master)
+ 2018.1+       | v2.2 (master)
  2017.1+       | v1.1
