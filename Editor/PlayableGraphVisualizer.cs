@@ -1,143 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using UnityEngine.Animations;
 using UnityEngine.Playables;
 
 namespace GraphVisualizer
 {
-    public class SharedPlayableNode : Node
-    {
-        public SharedPlayableNode(object content, float weight = 1, bool active = false)
-            : base(content, weight, active)
-        {
-        }
-
-        protected static string InfoString(string key, double value)
-        {
-            return String.Format(
-                    ((Math.Abs(value) < 100000.0) ? "<b>{0}:</b> {1:#.###}" : "<b>{0}:</b> {1:E4}"), key, value);
-        }
-
-        protected static string InfoString(string key, int value)
-        {
-            return String.Format("<b>{0}:</b> {1:D}", key, value);
-        }
-
-        protected static string InfoString(string key, object value)
-        {
-            return "<b>" + key + ":</b> " + (value ?? "(none)");
-        }
-
-        protected static string RemoveFromEnd(string str, string suffix)
-        {
-            if (str.EndsWith(suffix))
-            {
-                return str.Substring(0, str.Length - suffix.Length);
-            }
-            return str;
-        }
-    }
-
-    public class PlayableNode : SharedPlayableNode
-    {
-        public PlayableNode(Playable content, float weight = 1, bool active = false)
-            : base(content, weight, active)
-        {
-        }
-
-        public override Type GetContentType()
-        {
-            Playable p = Playable.Null;
-            try
-            {
-                p = (Playable) content;
-            }
-            catch
-            {
-                // Ignore.
-            }
-            return p.IsValid() ? p.GetPlayableType() : null;
-        }
-
-        public override string GetContentTypeShortName()
-        {
-            // Remove the extra Playable at the end of the Playable types.
-            string shortName = base.GetContentTypeShortName();
-            string cleanName = RemoveFromEnd(shortName, "Playable");
-            return string.IsNullOrEmpty(cleanName) ? shortName : cleanName;
-        }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine(InfoString("Handle", GetContentTypeShortName()));
-
-            var p = (Playable) content;
-            sb.AppendLine(InfoString("IsValid",  p.IsValid()));
-            if (p.IsValid())
-            {
-                sb.AppendLine(InfoString("IsDone", p.IsDone()));
-                sb.AppendLine(InfoString("InputCount", p.GetInputCount()));
-                sb.AppendLine(InfoString("OutputCount", p.GetOutputCount()));
-                sb.AppendLine(InfoString("PlayState", p.GetPlayState()));
-                sb.AppendLine(InfoString("Speed", p.GetSpeed()));
-                sb.AppendLine(InfoString("Duration", p.GetDuration()));
-                sb.AppendLine(InfoString("Time", p.GetTime()));
-                //sb.AppendLine(InfoString("Animation", p.animatedProperties));
-            }
-
-            return sb.ToString();
-        }
-    }
-
-    public class PlayableOutputNode : SharedPlayableNode
-    {
-        public PlayableOutputNode(PlayableOutput content)
-            : base(content, content.GetWeight(), true)
-        {
-        }
-
-        public override Type GetContentType()
-        {
-            PlayableOutput po = PlayableOutput.Null;
-            try
-            {
-                po = (PlayableOutput) content;
-            }
-            catch
-            {
-                // Ignore.
-            }
-            return po.IsOutputValid() ? po.GetPlayableOutputType() : null;
-        }
-
-        public override string GetContentTypeShortName()
-        {
-            // Remove the extra Playable at the end of the Playable types.
-            string shortName = base.GetContentTypeShortName();
-            string cleanName = RemoveFromEnd(shortName, "PlayableOutput") + "Output";
-            return string.IsNullOrEmpty(cleanName) ? shortName : cleanName;
-        }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine(InfoString("Handle", GetContentTypeShortName()));
-
-            var po = (PlayableOutput) content;
-            if (po.IsOutputValid())
-            {
-                sb.AppendLine(InfoString("IsValid", po.IsOutputValid()));
-                sb.AppendLine(InfoString("Weight", po.GetWeight()));
-                sb.AppendLine(InfoString("SourceOutputPort", po.GetSourceOutputPort()));
-            }
-
-            return sb.ToString();
-        }
-    }
-
     public class PlayableGraphVisualizer : Graph
     {
         private PlayableGraph m_PlayableGraph;
@@ -210,25 +76,17 @@ namespace GraphVisualizer
 
         private PlayableNode CreateNodeFromPlayable(Playable h, float weight)
         {
-            return new PlayableNode(h, weight, h.GetPlayState() == PlayState.Playing);
+            var type = h.GetPlayableType();
+            if (type == typeof(AnimationClipPlayable))
+                return new AnimationClipPlayableNode(h, weight);
+            if (type == typeof(AnimationLayerMixerPlayable))
+                return new AnimationLayerMixerPlayableNode(h, weight);
+            return new PlayableNode(h, weight);
         }
 
         private PlayableOutputNode CreateNodeFromPlayableOutput(PlayableOutput h)
         {
             return new PlayableOutputNode(h);
-        }
-
-        private static bool HasValidOuputs(Playable h)
-        {
-            for (int port = 0; port < h.GetOutputCount(); ++port)
-            {
-                Playable playable = h.GetOutput(port);
-                if (playable.IsValid())
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }
