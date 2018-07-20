@@ -2,33 +2,38 @@
 
 ## Introduction
 
-The PlayableGraph Visualizer window can be used to display any `PlayableGraph`.
-The tool can be used in both Play and Edit mode and will always reflect the current state of the graph.
-Playable Handles in the graph are represented by colored nodes, varying according to their type. Wire color intensity indicates the local weight of the blending.
+The PlayableGraph Visualizer is a tool that displays the PlayableGraphs in the scene.
+It can be used in both Play and Edit mode and will always reflect the current state of the graph.
+Playable nodes are represented by colored nodes, varying according to their type. Connections color intensity indicates its weight.
 
 ## Setup
 
-- Download the release that matches your current Unity version, or the latest if your Unity version is more recent than the latest release.
-- Copy the content of this repo into a folder called GraphVisualizer in your Unity Project.  You will need to do this for every project.
+🚨 Be careful to use a release that is compatible with your Unity version (see table below). The `master` branch is compatible with 2018.1 and later.
 
-OR
+There are two ways to install the PlayableGraph Visualizer:
 
-- From the command line change directory to your project's `Assets` directory.
-- Run `git clone https://github.com/Unity-Technologies/graph-visualizer`
+1. Standalone:
+    - Download the release compatibles with your Unity version;
+    - Uncompress the downloaded file in your `Assets` direcroty.
 
-## Window
-
-- You can open the Timeline Visualizer in **Window > PlayableGraph Visualizer**.
+2. Git (command line):
+    - Change directory to your project's `Assets` directory.
+    - Run `git clone https://github.com/Unity-Technologies/graph-visualizer`
 
 ## Usage
 
+- Open the PlayableGraph Visualizer in **Window > PlayableGraph Visualizer**.
 - Open any scene that contains at least one `PlayableGraph`.
-- By default, all the `PlayableGraph`s of your scene will be listed in the editor's top-left list.
-	- You can show just your `PlayableGraph` using `GraphVisualizerClient.Show(PlayableGraph)`.
-- Select the `PlayableGraph` to display in the top-left list.
-- Click on a Node to display more information about the associated Playable Handle.
+- Select the `PlayableGraph` to display in the window's top-left list.
+- Click on the nodes to display more information about the associated Playable Handle.
 
-## Notes
-
-- This tool was previously named Timeline Visualizer, but was renamed as we are refactoring it to support `PlayableGraph` stored in different types of component.
+_Note:_
+- You can show just your `PlayableGraph` using `GraphVisualizerClient.Show(PlayableGraph)` in the code.
 - If your `PlayableGraph` is only available in Play mode, you will not be able to see it in Edit mode.
+
+## Unity compatibility
+
+Release       | Unity version
+--------------|--------------
+v2.2 (master) | 2018.1+
+v1.1          | 2017.1+
