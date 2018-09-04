@@ -45,7 +45,11 @@ namespace GraphVisualizer
             {
                 sb.AppendLine(InfoString("IsValid", po.IsOutputValid()));
                 sb.AppendLine(InfoString("Weight", po.GetWeight()));
+#if UNITY_2018_2_OR_NEWER
                 sb.AppendLine(InfoString("SourceOutputPort", po.GetSourceOutputPort()));
+#else
+                sb.AppendLine(InfoString("SourceInputPort", po.GetSourceInputPort()));
+#endif
             }
 
             return sb.ToString();
