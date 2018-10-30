@@ -43,6 +43,9 @@ namespace GraphVisualizer
             var po = (PlayableOutput) content;
             if (po.IsOutputValid())
             {
+#if UNITY_2019_1_OR_NEWER
+                sb.AppendLine(InfoString("Name", po.GetEditorName()));
+#endif
                 sb.AppendLine(InfoString("IsValid", po.IsOutputValid()));
                 sb.AppendLine(InfoString("Weight", po.GetWeight()));
 #if UNITY_2018_2_OR_NEWER
