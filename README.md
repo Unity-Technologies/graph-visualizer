@@ -14,7 +14,7 @@ There are two ways to install the PlayableGraph Visualizer:
 
 1. Standalone:
     - Download the release compatibles with your Unity version;
-    - Uncompress the downloaded file in your `Assets` direcroty.
+    - Uncompress the downloaded file in your `Assets` directory.
 
 2. Git (command line):
     - Change directory to your project's `Assets` directory.
