@@ -1,5 +1,3 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Playables;
 
@@ -8,7 +6,7 @@ using UnityEngine.Playables;
 public class GraphVisualizerClient
 {
     private static GraphVisualizerClient s_Instance;
-    private Dictionary<PlayableGraph, string> m_Graphs = new Dictionary<PlayableGraph, string>();
+    private List<PlayableGraph> m_Graphs = new List<PlayableGraph>();
 
     public static GraphVisualizerClient instance
     {
@@ -19,26 +17,29 @@ public class GraphVisualizerClient
             return s_Instance;
         }
     }
+
     ~GraphVisualizerClient()
     {
         m_Graphs.Clear();
     }
-    public static void Show(PlayableGraph graph, string name)
+
+    public static void Show(PlayableGraph graph)
     {
-        if (!instance.m_Graphs.ContainsKey(graph))
+        if (!instance.m_Graphs.Contains(graph))
         {
-            instance.m_Graphs.Add(graph, name);
+            instance.m_Graphs.Add(graph);
         }
     }
+
     public static void Hide(PlayableGraph graph)
     {
-        if (instance.m_Graphs.ContainsKey(graph))
+        if (instance.m_Graphs.Contains(graph))
         {
             instance.m_Graphs.Remove(graph);
         }
     }
 
-    public static IEnumerable<KeyValuePair<PlayableGraph, string>> GetGraphs()
+    public static IEnumerable<PlayableGraph> GetGraphs()
     {
         return instance.m_Graphs;
     }
