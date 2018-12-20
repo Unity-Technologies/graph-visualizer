@@ -1,0 +1,20 @@
+{
+	"name": "com.unity.playablegraph-visualizer",
+	"displayName": "PlayableGraph Visualizer",
+	"version": "0.1.0-preview",
+	"unity": "2018.1",
+	"description": "The PlayableGraph Visualizer is a tool that displays the PlayableGraphs in the scene. It can be used in both Play and Edit mode and will always reflect the current state of the graph. Playable nodes are represented by colored nodes, varying according to their type. Connections color intensity indicates its weight.",
+    "licence": "MIT",
+    "author": {
+        "name": "Unity"
+    },
+    "keywords": [
+        "playable",
+        "graph",
+        "playablegraph",
+        "animation",
+        "timeline"
+    ],
+	"dependencies": {
+	}
+}
