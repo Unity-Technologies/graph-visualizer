@@ -1,7 +1,7 @@
 name: Build and Test
 agent:
   type: Unity::VM
-  image: sdet/gamecode_win10:v0.2.1-91595
+  image: sdet/gamecode_win10:v0.1.1-92318
   flavor: m1.large
   name: Validate a Package in CI
 commands:
