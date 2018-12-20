@@ -19,7 +19,7 @@ triggers:
 artifacts:
   Package.zip:
     paths:
-      - "automation/packages/com.unity.packages-starter-kit-1.0.0-preview.tgz"
+      - "automation/packages/com.unity.playablegraph-visualizer-0.1.0-preview.tgz"
   TestResults.zip:
     paths:
       - "my-project/automation/test-results/*"
