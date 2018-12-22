@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEditor;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public class PlayableGraphVisualizerWindow : EditorWindow, IHasCustomMenu
     {
@@ -32,7 +32,7 @@ namespace GraphVisualizer
             m_GraphSettings.showLegend = true;
         }
 
-        [MenuItem("Window/PlayableGraph Visualizer")]
+        [MenuItem("Window/Playables/PlayableGraph Visualizer", priority=3010)]
         public static void ShowWindow()
         {
             GetWindow<PlayableGraphVisualizerWindow>("PlayableGraph Visualizer");

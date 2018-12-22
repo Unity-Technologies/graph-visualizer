@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public class Node
     {

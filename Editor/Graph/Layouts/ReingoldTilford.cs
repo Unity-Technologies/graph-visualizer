@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     // Implementation of Reingold and Tilford algorithm for graph layout
     // "Tidier Drawings of Trees", IEEE Transactions on Software Engineering Vol SE-7 No.2, March 1981

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public abstract class Graph : IEnumerable<Node>
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     // Interface for rendering a tree layout to screen.
     public interface IGraphRenderer

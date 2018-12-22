@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using UnityEngine.Playables;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public class PlayableNode : SharedPlayableNode
     {

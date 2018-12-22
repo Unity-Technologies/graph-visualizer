@@ -1,6 +1,6 @@
 using System;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public class SharedPlayableNode : Node
     {

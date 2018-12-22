@@ -2,7 +2,7 @@ using System.Text;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public class AnimationClipPlayableNode : PlayableNode
     {

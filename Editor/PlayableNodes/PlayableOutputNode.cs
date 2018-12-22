@@ -3,7 +3,7 @@ using System.Text;
 using UnityEngine.Playables;
 using UnityEditor.Playables;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public class PlayableOutputNode : SharedPlayableNode
     {

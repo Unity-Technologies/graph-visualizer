@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEditor;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public class DefaultGraphRenderer : IGraphRenderer
     {

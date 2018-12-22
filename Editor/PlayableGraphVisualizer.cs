@@ -2,7 +2,7 @@
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     public class PlayableGraphVisualizer : Graph
     {
@@ -37,7 +37,7 @@ namespace GraphVisualizer
             if(node is PlayableOutputNode)
                 return GetInputsFromPlayableOutputNode((PlayableOutput)node.content);
 
-            return new List<Node>();     
+            return new List<Node>();
         }
 
         private List<Node> GetInputsFromPlayableNode(Playable h)
@@ -63,7 +63,7 @@ namespace GraphVisualizer
         {
             var inputs = new List<Node>();
             if (h.IsOutputValid())
-            {            
+            {
                 Playable playable = h.GetSourcePlayable();
                 if (playable.IsValid())
                 {

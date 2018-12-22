@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GraphVisualizer
+namespace Unity.Tools.GraphVisualizer
 {
     // Interface for a generic graph layout.
     public interface IGraphLayout
