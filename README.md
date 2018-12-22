@@ -14,15 +14,15 @@ There are two ways to install the PlayableGraph Visualizer:
 
 1. Standalone:
     - Download the release compatibles with your Unity version;
-    - Uncompress the downloaded file in your `Assets` directory.
+    - Uncompress the downloaded file in your `Packages` directory.
 
 2. Git (command line):
-    - Change directory to your project's `Assets` directory.
+    - Change directory to your project's `Packages` directory.
     - Run `git clone https://github.com/Unity-Technologies/graph-visualizer`
 
 ## Usage
 
-- Open the PlayableGraph Visualizer in **Window > PlayableGraph Visualizer**.
+- Open the PlayableGraph Visualizer in **Window > Playables > PlayableGraph Visualizer**.
 - Open any scene that contains at least one `PlayableGraph`.
 - Select the `PlayableGraph` to display in the window's top-left list.
 - Click on the nodes to display more information about the associated Playable Handle.
