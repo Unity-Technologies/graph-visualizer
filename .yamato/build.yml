@@ -1,0 +1,28 @@
+name: Build and Test
+agent:
+  type: Unity::VM
+  image: sdet/gamecode_win10:v0.1.1-92318
+  flavor: m1.large
+  name: Validate a Package in CI
+commands:
+  - npm install upm-ci-utils -g --registry https://api.bintray.com/npm/unity/unity-npm
+  # Add your custom build commands here
+  - upm-ci package pack --package-path .
+  - upm-ci package test --editor-revision 445af4d85bb46baa615b469ca3cca83ec8892e78 --package-path .
+triggers:
+  branches:
+    only:
+      - master
+  tags:
+    only:
+      - /(p|P)ublish/
+artifacts:
+  Package.zip:
+    paths:
+      - "automation/packages/com.unity.playablegraph-visualizer-0.1.0-preview.2.tgz"
+  TestResults.zip:
+    paths:
+      - "my-project/automation/test-results/*"
+  EditorLogs.zip:
+    paths:
+      - "my-project/automation/logs/*"
