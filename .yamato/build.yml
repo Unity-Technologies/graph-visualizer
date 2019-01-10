@@ -19,10 +19,7 @@ triggers:
 artifacts:
   Package.zip:
     paths:
-      - "automation/packages/com.unity.playablegraph-visualizer-0.1.0-preview.2.tgz"
-  TestResults.zip:
+      - "automation/packages/*.tgz"
+  UTR_Output.zip:
     paths:
-      - "my-project/automation/test-results/*"
-  EditorLogs.zip:
-    paths:
-      - "my-project/automation/logs/*"
+      - "utr_output/**/*"
