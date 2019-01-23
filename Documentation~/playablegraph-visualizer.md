@@ -10,7 +10,7 @@ To install this package, follow the instructions in the
 
 # Using PlayableGraph Visualizer
 
-- Open the PlayableGraph Visualizer in **Window > PlayableGraph Visualizer**
+- Open the PlayableGraph Visualizer in **Window > Analysis > PlayableGraph Visualizer**
 - Open any scene that contains at least one `PlayableGraph`
 - In the top-left list, select the `PlayableGraph` to display in the window
 - Click on the nodes to display more information about the associated Playable handle
