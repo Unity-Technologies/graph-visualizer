@@ -32,7 +32,7 @@ namespace GraphVisualizer
             m_GraphSettings.showLegend = true;
         }
 
-        [MenuItem("Window/PlayableGraph Visualizer")]
+        [MenuItem("Window/Analysis/PlayableGraph Visualizer")]
         public static void ShowWindow()
         {
             GetWindow<PlayableGraphVisualizerWindow>("PlayableGraph Visualizer");
