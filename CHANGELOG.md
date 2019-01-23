@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Updated the Yamato CI configuration
 - Moved from MIT to UCL license
+- Moved menu entry under Window > Analysis
 
 ## [0.1.0] - 2018-12-20
 
