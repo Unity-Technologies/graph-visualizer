@@ -24,6 +24,9 @@ namespace GraphVisualizer
         public float aspectRatio;
 
         // Control the display of the legend.
+        public bool showInspector;
+
+        // Control the display of the legend.
         public bool showLegend;
     }
 }
