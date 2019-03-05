@@ -9,7 +9,7 @@ namespace GraphVisualizer
 {
     public class DefaultGraphRenderer : IGraphRenderer
     {
-        public event Action<Node> nodeClicked;
+        protected event Action<Node> nodeClicked;
         private static readonly Color s_EdgeColorMin = new Color(1.0f, 1.0f, 1.0f, 0.1f);
         private static readonly Color s_EdgeColorMax = Color.white;
         private static readonly Color s_LegendBackground = new Color(0, 0, 0, 0.1f);
