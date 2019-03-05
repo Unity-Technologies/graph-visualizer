@@ -73,7 +73,7 @@ namespace GraphVisualizer
 
             PrepareLegend(graphLayout.vertices);
 
-            if (graphSettings.showLegend || graphSettings.showInspector || m_SelectedNode != null)
+            if (graphSettings.showLegend || graphSettings.showInspector)
             {
                 legendArea = new Rect(totalDrawingArea)
                 {
