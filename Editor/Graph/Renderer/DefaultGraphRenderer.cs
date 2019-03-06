@@ -73,7 +73,7 @@ namespace GraphVisualizer
 
             PrepareLegend(graphLayout.vertices);
 
-            if (graphSettings.showLegend || graphSettings.showInspector)
+            if (graphSettings.showInspector)
             {
                 legendArea = new Rect(totalDrawingArea)
                 {
@@ -215,7 +215,7 @@ namespace GraphVisualizer
             GUILayout.BeginArea(legendArea);
             GUILayout.BeginVertical();
 
-            if (graphSettings.showInspector || m_SelectedNode != null)
+            if (graphSettings.showInspector)
             {
                 GUILayout.Label("Inspector", m_SubTitleStyle);
 
