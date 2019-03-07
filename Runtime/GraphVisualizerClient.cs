@@ -39,6 +39,11 @@ public class GraphVisualizerClient
         }
     }
 
+    public static void ClearGraphs()
+    {
+        instance.m_Graphs.Clear();
+    }
+
     public static IEnumerable<PlayableGraph> GetGraphs()
     {
         return instance.m_Graphs;
