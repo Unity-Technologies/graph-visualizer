@@ -1,0 +1,11 @@
+{
+    "name": "Unity.PlayableGraphVisualizer.Tests",
+    "references": [
+        "Unity.PlayableGraphVisualizer"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}
