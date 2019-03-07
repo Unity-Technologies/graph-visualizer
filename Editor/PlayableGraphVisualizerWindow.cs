@@ -29,6 +29,7 @@ namespace GraphVisualizer
             m_GraphSettings.maximumNormalizedNodeSize = s_DefaultMaximumNormalizedNodeSize;
             m_GraphSettings.maximumNodeSizeInPixels = s_DefaultMaximumNodeSizeInPixels;
             m_GraphSettings.aspectRatio = s_DefaultAspectRatio;
+            m_GraphSettings.showInspector = true;
             m_GraphSettings.showLegend = true;
         }
 
@@ -179,7 +180,13 @@ namespace GraphVisualizer
 
         public virtual void AddItemsToMenu(GenericMenu menu)
         {
+            menu.AddItem(new GUIContent("Inspector"), m_GraphSettings.showInspector, ToggleInspector);
             menu.AddItem(new GUIContent("Legend"), m_GraphSettings.showLegend, ToggleLegend);
+        }
+
+        void ToggleInspector()
+        {
+            m_GraphSettings.showInspector = !m_GraphSettings.showInspector;
         }
 
         void ToggleLegend()

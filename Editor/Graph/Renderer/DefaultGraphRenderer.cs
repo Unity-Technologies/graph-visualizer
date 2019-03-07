@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace GraphVisualizer
 {
     public class DefaultGraphRenderer : IGraphRenderer
     {
+        protected event Action<Node> nodeClicked;
         private static readonly Color s_EdgeColorMin = new Color(1.0f, 1.0f, 1.0f, 0.1f);
         private static readonly Color s_EdgeColorMax = Color.white;
         private static readonly Color s_LegendBackground = new Color(0, 0, 0, 0.1f);
@@ -36,6 +37,7 @@ namespace GraphVisualizer
         private Node m_SelectedNode;
 
         private Texture2D m_ColorBar;
+        Vector2 m_ScrollPos;
 
         private struct NodeTypeLegend
         {
@@ -48,12 +50,18 @@ namespace GraphVisualizer
             InitializeStyles();
         }
 
+        public void Reset()
+        {
+            m_SelectedNode = null;
+        }
+
         public void Draw(IGraphLayout graphLayout, Rect drawingArea)
         {
             GraphSettings defaults;
             defaults.maximumNormalizedNodeSize = s_DefaultMaximumNormalizedNodeSize;
             defaults.maximumNodeSizeInPixels = s_DefaultMaximumNodeSizeInPixels;
             defaults.aspectRatio = s_DefaultAspectRatio;
+            defaults.showInspector = true;
             defaults.showLegend = true;
             Draw(graphLayout, drawingArea, defaults);
         }
@@ -63,19 +71,19 @@ namespace GraphVisualizer
             var legendArea = new Rect();
             var drawingArea = new Rect(totalDrawingArea);
 
-            if (graphSettings.showLegend)
-            {
-                PrepareLegend(graphLayout.vertices);
+            PrepareLegend(graphLayout.vertices);
 
+            if (graphSettings.showInspector)
+            {
                 legendArea = new Rect(totalDrawingArea)
                 {
-                    width = EstimateLegendWidth() + s_BorderSize * 2
+                    width = Mathf.Max(EstimateLegendWidth(), drawingArea.width * 0.25f) + s_BorderSize * 2
                 };
 
                 legendArea.x = drawingArea.xMax - legendArea.width;
-                drawingArea.width -= legendArea.width;// + s_BorderSize;
+                drawingArea.width -= legendArea.width; // + s_BorderSize;
 
-                DrawLegend(legendArea);
+                DrawLegend(graphSettings, legendArea);
             }
 
             if (m_SelectedNode != null)
@@ -87,6 +95,9 @@ namespace GraphVisualizer
                     if (drawingArea.Contains(mousePos))
                     {
                         m_SelectedNode = null;
+
+                        if (nodeClicked != null)
+                            nodeClicked(m_SelectedNode);
                     }
                 }
             }
@@ -98,22 +109,21 @@ namespace GraphVisualizer
         {
             m_LegendLabelStyle = new GUIStyle(GUI.skin.label)
             {
-                margin = {top = 0},
-                       alignment = TextAnchor.UpperLeft
+                margin = { top = 0 },
+                alignment = TextAnchor.UpperLeft
             };
 
             m_NodeRectStyle = new GUIStyle
             {
                 normal =
                 {
-                    background = (Texture2D) Resources.Load("Node"),
+                    background = (Texture2D)Resources.Load("Node"),
                     textColor = Color.black,
                 },
-                    border = new RectOffset(10, 10, 10, 10),
-                    alignment = TextAnchor.MiddleCenter,
-                    wordWrap = true,
-                    clipping = TextClipping.Clip
-
+                border = new RectOffset(10, 10, 10, 10),
+                alignment = TextAnchor.MiddleCenter,
+                wordWrap = true,
+                clipping = TextClipping.Clip
             };
 
             m_SubTitleStyle = EditorStyles.boldLabel;
@@ -124,11 +134,10 @@ namespace GraphVisualizer
                 {
                     textColor = Color.white,
                 },
-                    richText = true,
-                    alignment = TextAnchor.MiddleLeft,
-                    wordWrap = true,
-                    clipping = TextClipping.Clip
-
+                richText = true,
+                alignment = TextAnchor.MiddleLeft,
+                wordWrap = true,
+                clipping = TextClipping.Clip
             };
         }
 
@@ -148,7 +157,7 @@ namespace GraphVisualizer
                 m_LegendForType[nodeType] = new NodeTypeLegend
                 {
                     label = v.node.GetContentTypeShortName(),
-                          color = v.node.GetColor()
+                    color = v.node.GetColor()
                 };
             }
         }
@@ -160,6 +169,7 @@ namespace GraphVisualizer
             {
                 legendWidth = Mathf.Max(legendWidth, GUI.skin.label.CalcSize(new GUIContent(legend.label)).x);
             }
+
             legendWidth += s_LegendFixedOverheadWidth;
             return legendWidth;
         }
@@ -172,17 +182,16 @@ namespace GraphVisualizer
             {
                 GUI.color = s_SelectedNodeColor;
                 float t = s_SelectedNodeThickness + (active ? s_ActiveNodeThickness : 0.0f);
-                GUI.Box(new Rect(rect.x - t, rect.y - t,
-                            rect.width + 2 * t, rect.height + 2 * t),
-                        string.Empty, m_NodeRectStyle);
+                GUI.Box(new Rect(rect.x - t, rect.y - t, rect.width + 2 * t, rect.height + 2 * t),
+                    string.Empty, m_NodeRectStyle);
             }
 
             if (active)
             {
                 GUI.color = s_ActiveNodeColor;
                 GUI.Box(new Rect(rect.x - s_ActiveNodeThickness, rect.y - s_ActiveNodeThickness,
-                            rect.width + 2 * s_ActiveNodeThickness, rect.height + 2 * s_ActiveNodeThickness),
-                        string.Empty, m_NodeRectStyle);
+                        rect.width + 2 * s_ActiveNodeThickness, rect.height + 2 * s_ActiveNodeThickness),
+                    string.Empty, m_NodeRectStyle);
             }
 
             // Body + Text
@@ -193,7 +202,7 @@ namespace GraphVisualizer
             GUI.color = originalColor;
         }
 
-        private void DrawLegend(Rect legendArea)
+        private void DrawLegend(GraphSettings graphSettings, Rect legendArea)
         {
             EditorGUI.DrawRect(legendArea, s_LegendBackground);
 
@@ -206,40 +215,50 @@ namespace GraphVisualizer
             GUILayout.BeginArea(legendArea);
             GUILayout.BeginVertical();
 
-            GUILayout.Label("Inspector", m_SubTitleStyle);
+            if (graphSettings.showInspector)
+            {
+                GUILayout.Label("Inspector", m_SubTitleStyle);
 
-            if (m_SelectedNode != null)
-            {
-                GUILayout.Label(m_SelectedNode.ToString(), m_InspectorStyle);
-            }
-            else
-            {
-                GUILayout.Label("Click on a node\nto display its details.");
+                if (m_SelectedNode != null)
+                {
+                    using (var scrollView = new EditorGUILayout.ScrollViewScope(m_ScrollPos))
+                    {
+                        m_ScrollPos = scrollView.scrollPosition;
+                        GUILayout.Label(m_SelectedNode.ToString(), m_InspectorStyle);
+                    }
+                }
+                else
+                {
+                    GUILayout.Label("Click on a node\nto display its details.");
+                }
             }
 
             GUILayout.FlexibleSpace();
 
-            GUILayout.Label("Legend", m_SubTitleStyle);
-
-            foreach (var pair in m_LegendForType)
+            if (graphSettings.showLegend)
             {
-                DrawLegendEntry(pair.Value.color, pair.Value.label, false);
+                GUILayout.Label("Legend", m_SubTitleStyle);
+
+                foreach (var pair in m_LegendForType)
+                {
+                    DrawLegendEntry(pair.Value.color, pair.Value.label, false);
+                }
+
+                DrawLegendEntry(Color.gray, "Playing", true);
+
+                GUILayout.Space(20);
+
+                GUILayout.Label("Edge weight", m_SubTitleStyle);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("0");
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("1");
+                GUILayout.EndHorizontal();
+
+                DrawEdgeWeightColorBar(legendArea.width);
+
+                GUILayout.Space(20);
             }
-
-            DrawLegendEntry(Color.gray, "Playing", true);
-
-            GUILayout.Space(20);
-
-            GUILayout.Label("Edge weight", m_SubTitleStyle);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("0");
-            GUILayout.FlexibleSpace();
-            GUILayout.Label("1");
-            GUILayout.EndHorizontal();
-
-            DrawEdgeWeightColorBar(legendArea.width);
-
-            GUILayout.Space(20);
 
             GUILayout.EndVertical();
             GUILayout.EndArea();
@@ -272,7 +291,7 @@ namespace GraphVisualizer
                 var cols = m_ColorBar.GetPixels();
                 for (int x = 0; x < nbLevels; x++)
                 {
-                    Color c = Color.Lerp(s_EdgeColorMin, s_EdgeColorMax, (float) x / nbLevels);
+                    Color c = Color.Lerp(s_EdgeColorMin, s_EdgeColorMax, (float)x / nbLevels);
                     cols[x] = c;
                 }
 
@@ -289,9 +308,9 @@ namespace GraphVisualizer
         {
             // add border, except on right-hand side where the legend will provide necessary padding
             drawingArea = new Rect(drawingArea.x + s_BorderSize,
-                    drawingArea.y + s_BorderSize,
-                    drawingArea.width - s_BorderSize * 2,
-                    drawingArea.height - s_BorderSize * 2);
+                drawingArea.y + s_BorderSize,
+                drawingArea.width - s_BorderSize * 2,
+                drawingArea.height - s_BorderSize * 2);
 
             var b = new Bounds(Vector3.zero, Vector3.zero);
             foreach (Vertex v in graphLayout.vertices)
@@ -362,6 +381,9 @@ namespace GraphVisualizer
             if (newSelectedNode != null)
             {
                 m_SelectedNode = newSelectedNode;
+
+                if (nodeClicked != null)
+                    nodeClicked(m_SelectedNode);
             }
             else if (!oldSelectionFound)
             {
@@ -376,7 +398,7 @@ namespace GraphVisualizer
         {
             var extraTickness = (s_SelectedNodeThickness + s_ActiveNodeThickness) * 2.0f;
             var nodeSize = new Vector2(graphSettings.maximumNormalizedNodeSize * scale.x - extraTickness,
-                    graphSettings.maximumNormalizedNodeSize * scale.y - extraTickness);
+                graphSettings.maximumNormalizedNodeSize * scale.y - extraTickness);
 
             // Adjust aspect ratio after scaling
             float currentAspectRatio = nodeSize.x / nodeSize.y;
@@ -402,6 +424,7 @@ namespace GraphVisualizer
             {
                 nodeSize *= graphSettings.maximumNodeSizeInPixels / nodeSize.y;
             }
+
             return nodeSize;
         }
 
@@ -415,8 +438,8 @@ namespace GraphVisualizer
             int longuestWord = words.Max(s => s.Length);
 
             // Approximate the text rectangle size using magic values.
-            int width = longuestWord * (int) (0.8f * s_NodeMaxFontSize);
-            int height = nbLignes * (int) (1.5f * s_NodeMaxFontSize);
+            int width = longuestWord * (int)(0.8f * s_NodeMaxFontSize);
+            int height = nbLignes * (int)(1.5f * s_NodeMaxFontSize);
 
             float factor = Math.Min(nodeSize.x / width, nodeSize.y / height);
 
@@ -436,15 +459,15 @@ namespace GraphVisualizer
         {
             string nodeType = node.GetContentTypeName();
             NodeTypeLegend nodeTypeLegend = m_LegendForType[nodeType];
-            string formatedLabel = Regex.Replace(nodeTypeLegend.label, "(\\B[A-Z])", "\n$1"); // Split into multi-lines
+            string formattedLabel = Regex.Replace(nodeTypeLegend.label, "((?<![A-Z])\\B[A-Z])", "\n$1"); // Split into multi-lines
 
-            DrawRect(nodeRect, nodeTypeLegend.color, formatedLabel, node.active, selected);
+            DrawRect(nodeRect, nodeTypeLegend.color, formattedLabel, node.active, selected);
         }
 
         // Compute the tangents for the graphLayout edges. Assumes that graphLayout is drawn from left to right
         private static void GetTangents(Vector2 start, Vector2 end, out Vector3[] points, out Vector3[] tangents)
         {
-            points = new Vector3[] {start, end};
+            points = new Vector3[] { start, end };
             tangents = new Vector3[2];
 
             // Heuristics to define the length of the tangents and tweak the look of the bezier curves.
@@ -461,8 +484,13 @@ namespace GraphVisualizer
 
             GetTangents(a, b, out points, out tangents);
 
-            Handles.DrawBezier(points[0], points[1], tangents[0], tangents[1],
-                    Color.Lerp(s_EdgeColorMin, s_EdgeColorMax, weight), null, 5f);
+            Color color;
+            if (Mathf.Approximately(weight, float.MaxValue))
+                color = Color.yellow;
+            else
+                color = Color.Lerp(s_EdgeColorMin, s_EdgeColorMax, weight);
+
+            Handles.DrawBezier(points[0], points[1], tangents[0], tangents[1], color, null, 5f);
         }
     }
 }
