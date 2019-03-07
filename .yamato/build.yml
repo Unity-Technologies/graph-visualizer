@@ -27,9 +27,9 @@ platforms:
       only:
         - master
   artifacts:
-    UTR_Output.zip:
+    logs.zip:
       paths:
-        - "utr_output/**/*"
+        - "upm-ci~/test-results/**/*"
 {% endfor %}
 {% endfor %}
 
@@ -43,15 +43,15 @@ run_preview_verified_staging:
   commands:
     - npm install upm-ci-utils -g --registry https://api.bintray.com/npm/unity/unity-npm
     - upm-ci package pack
-    - upm-ci package publish --registry staging
+    - upm-ci package publish
   triggers:
     tags:
       only:
-        - /^(v|V)[0-9].[0-9].[0-9]/
+        - /^[vV][0-9]+.[0-9]+.[0-9]+/
   artifacts:
-    Package.zip:
+    artifacts.zip:
       paths:
-        - "automation/package/*.tgz"
+        - "upm-ci~/packages/*.tgz"
   dependencies:
   {% for editor in editors %}
   {% for platform in platforms %}
