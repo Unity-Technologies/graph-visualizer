@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
@@ -59,6 +60,45 @@ namespace GraphVisualizer
             return inputs;
         }
 
+        protected override bool ShouldAddChild(Node parent, Node child)
+        {
+            var grandParent = parent.parent;
+            if (child is PlayableNode && parent is PlayableNode && grandParent != null)
+            {
+                Playable p = (Playable) parent.content;
+                if (p.GetTraversalMode() == PlayableTraversalMode.Passthrough)
+                {
+                    int index = -1;
+                    int childIndex = FindInputIndex(p, (Playable) child.content);
+                    if (grandParent is PlayableOutputNode)
+                    {
+                        var output = (PlayableOutput) grandParent.content;
+                        index = Math.Max(0,output.GetSourceOutputPort());
+                    }
+                    else if (grandParent is PlayableNode)
+                    {
+                        index = FindInputIndex((Playable) grandParent.content, p);
+                    }
+
+                    if (index != -1 && childIndex != -1)
+                        return index == childIndex;
+                }
+            }
+            return base.ShouldAddChild(parent, child);
+        }
+
+        private int FindInputIndex(Playable output, Playable input)
+        {
+            int inputCount = output.GetInputCount();
+            for (int i = 0; i < inputCount; i++)
+            {
+                if (output.GetInput(i).Equals(input))
+                    return i;
+            }
+
+            return -1;
+        }
+        
         private List<Node> GetInputsFromPlayableOutputNode(PlayableOutput h)
         {
             var inputs = new List<Node>();

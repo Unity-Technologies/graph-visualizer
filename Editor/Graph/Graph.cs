@@ -24,6 +24,9 @@ namespace GraphVisualizer
 
         // Derived class should implement how to populate this graph (usually by calling AddNodeHierarchy()).
         protected abstract void Populate();
+        
+        // Derived class can implement this to filter the graph during AddNodeHierarchy
+        protected virtual bool ShouldAddChild(Node parent, Node child) { return true; }
 
         public void AddNodeHierarchy(Node root)
         {
@@ -35,6 +38,9 @@ namespace GraphVisualizer
 
             foreach (Node child in children)
             {
+                if (!ShouldAddChild(root, child))
+                    continue;
+
                 root.AddChild(child);
                 AddNodeHierarchy(child);
             }
