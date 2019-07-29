@@ -46,7 +46,11 @@ namespace GraphVisualizer
             List<string> options = new List<string>(graphs.Count);
             foreach (var graph in graphs)
             {
-                string name = graph.GetEditorName();
+                string name = GraphVisualizerClient.GetName(graph);
+                if (name == null)
+                {
+                    name = graph.GetEditorName();
+                }
                 options.Add(name.Length != 0 ? name : "[Unnamed]");
             }
 
