@@ -57,6 +57,17 @@ namespace GraphVisualizer
             return GetContentTypeName().Split('.').Last();
         }
 
+        public virtual string GetLabel()
+        {
+            return null;
+        }
+
+        public virtual bool TryGetProgress(out float progress)
+        {
+            progress = 0f;
+            return false;
+        }
+
         public override string ToString()
         {
             return "Node content: " + GetContentTypeName();
