@@ -459,7 +459,7 @@ namespace GraphVisualizer
         {
             string nodeType = node.GetContentTypeName();
             NodeTypeLegend nodeTypeLegend = m_LegendForType[nodeType];
-            string formattedLabel = Regex.Replace(nodeTypeLegend.label, "((?<![A-Z])\\B[A-Z])", "\n$1"); // Split into multi-lines
+            string formattedLabel = node.GetLabel() ?? Regex.Replace(nodeTypeLegend.label, "((?<![A-Z])\\B[A-Z])", "\n$1"); // Split into multi-lines
 
             DrawRect(nodeRect, nodeTypeLegend.color, formattedLabel, node.active, selected);
         }

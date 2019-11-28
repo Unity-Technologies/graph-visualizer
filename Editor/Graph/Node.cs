@@ -57,6 +57,11 @@ namespace GraphVisualizer
             return GetContentTypeName().Split('.').Last();
         }
 
+        public virtual string GetLabel()
+        {
+            return null;
+        }
+
         public override string ToString()
         {
             return "Node content: " + GetContentTypeName();

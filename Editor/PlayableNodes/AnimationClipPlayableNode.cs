@@ -11,6 +11,18 @@ namespace GraphVisualizer
         {
         }
 
+        public override string GetLabel()
+        {
+            var p = (Playable)content;
+            if (p.IsValid())
+            {
+                var acp = (AnimationClipPlayable)p;
+                var clip = acp.GetAnimationClip();
+                return clip ? clip.name : "(none)";
+            }
+            return "(invalid)";
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
