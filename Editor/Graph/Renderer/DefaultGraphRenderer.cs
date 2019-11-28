@@ -462,6 +462,12 @@ namespace GraphVisualizer
             string formattedLabel = node.GetLabel() ?? Regex.Replace(nodeTypeLegend.label, "((?<![A-Z])\\B[A-Z])", "\n$1"); // Split into multi-lines
 
             DrawRect(nodeRect, nodeTypeLegend.color, formattedLabel, node.active, selected);
+
+            if (node.TryGetProgress(out float progress))
+            {
+                float height = 10f;
+                EditorGUI.DrawRect(new Rect(nodeRect.xMin, nodeRect.yMax - height, nodeRect.width * progress, height), Color.white);
+            }
         }
 
         // Compute the tangents for the graphLayout edges. Assumes that graphLayout is drawn from left to right
